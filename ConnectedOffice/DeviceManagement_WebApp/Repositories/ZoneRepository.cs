@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using DeviceManagement_WebApp.Data;
 using DeviceManagement_WebApp.Models;
 using DeviceManagement_WebApp.Repositories;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+
 namespace DeviceManagement_WebApp.Repositories
 {
     public class ZoneRepository
@@ -32,25 +34,19 @@ namespace DeviceManagement_WebApp.Repositories
                 .FirstOrDefaultAsync(m => m.ZoneId == id);
         }
 
-        public async void CreateZone(Zone zone)
+        public async Task CreateZone(Zone zone)
         {
             zone.ZoneId = Guid.NewGuid();
             _context.Add(zone);
             await _context.SaveChangesAsync();
         }
 
-        // GET: Zones/Edit/5
         public async Task<Zone> FindAsync(Guid? id)
         {
             return await _context.Zone.FindAsync(id);
         }
 
-        // POST: Zones/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async void EditAsync(Guid id,Zone zone)
+        public async Task EditAsync(Guid id,Zone zone)
         {
             try
             {
@@ -61,23 +57,9 @@ namespace DeviceManagement_WebApp.Repositories
             {
                 throw;
             }
-
         }
 
-        // GET: Zones/Delete/5
-        public async void DeleteAsync(Guid? id)
-        {
-            var zone = await _context.Zone
-                .FirstOrDefaultAsync(m => m.ZoneId == id);
-
-            _context.Remove(zone);
-            await _context.SaveChangesAsync();
-        }
-
-        // POST: Zones/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async void DeleteConfirmedAsync(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             var zone = await _context.Zone.FindAsync(id);
             _context.Zone.Remove(zone);

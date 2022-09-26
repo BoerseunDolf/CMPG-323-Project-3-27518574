@@ -15,11 +15,15 @@ namespace DeviceManagement_WebApp.Controllers
     {
         private readonly ConnectedOfficeContext _context;
         private readonly DeviceRepository _deviceRepository;
+        private readonly ZoneRepository _zoneRepository;
+        private readonly CategoryRepository _categoryRepository;
 
-        public DevicesController(ConnectedOfficeContext context, DeviceRepository deviceRepository)
+        public DevicesController(ConnectedOfficeContext context, DeviceRepository deviceRepository, ZoneRepository zoneRepository, CategoryRepository categoryRepository)
         {
             _context = context;
             _deviceRepository = deviceRepository;
+            _zoneRepository = zoneRepository;
+            _categoryRepository = categoryRepository;
         }
 
         // GET: Devices
@@ -47,9 +51,14 @@ namespace DeviceManagement_WebApp.Controllers
         }
 
         // GET: Devices/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            _deviceRepository.Create();
+            var categoryList = await _categoryRepository.GetCategoryListAsync();
+            var zoneList = await _zoneRepository.GetZoneListAsync();
+
+            ViewData["CategoryId"] = new SelectList(categoryList, "CategoryId", "CategoryName");
+            ViewData["ZoneId"] = new SelectList(zoneList, "ZoneId", "ZoneName");
+
             return View();
         }
 
@@ -58,9 +67,9 @@ namespace DeviceManagement_WebApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActive,DateCreated")] Device device)
+        public async Task<IActionResult> Create([Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActvie,DateCreated")] Device device)
         {
-            _deviceRepository.CreateDevice(device);
+            await _deviceRepository.CreateDeviceAsync(device);
             return RedirectToAction(nameof(Index));
         }
 
@@ -71,6 +80,12 @@ namespace DeviceManagement_WebApp.Controllers
             {
                 return NotFound();
             }
+
+            var categoryList = await _categoryRepository.GetCategoryListAsync();
+            var zoneList = await _zoneRepository.GetZoneListAsync();
+
+            ViewData["CategoryId"] = new SelectList(categoryList, "CategoryId", "CategoryName");
+            ViewData["ZoneId"] = new SelectList(zoneList, "ZoneId", "ZoneName");
 
             var device = await _context.Device.FindAsync(id);
 
@@ -87,7 +102,7 @@ namespace DeviceManagement_WebApp.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActive,DateCreated")] Device device)
+        public async Task<IActionResult> Edit(Guid id, [Bind("DeviceId,DeviceName,CategoryId,ZoneId,Status,IsActvie,DateCreated")] Device device)
         {
             if (id != device.DeviceId)
             {
@@ -95,7 +110,7 @@ namespace DeviceManagement_WebApp.Controllers
             }
             try
             {
-                _deviceRepository.EditAsync(id, device);
+                await _deviceRepository.EditAsync(id, device);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -120,7 +135,7 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
-            var device = await _deviceRepository.DeleteAsync(id);
+            var device = await _deviceRepository.GetDetailAsync(id);
 
             if (device == null)
             {
@@ -135,7 +150,7 @@ namespace DeviceManagement_WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            _deviceRepository.DeleteConfirmed(id);
+            await _deviceRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

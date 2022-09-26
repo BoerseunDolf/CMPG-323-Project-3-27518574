@@ -58,7 +58,7 @@ namespace DeviceManagement_WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("ZoneId,ZoneName,ZoneDescription,DateCreated")] Zone zone)
         {
-            _zoneRepository.CreateZone(zone);
+            await _zoneRepository.CreateZone(zone);
             return RedirectToAction(nameof(Index));
         }
 
@@ -93,7 +93,7 @@ namespace DeviceManagement_WebApp.Controllers
 
             try
             {
-                _zoneRepository.EditAsync(id, zone);
+                await _zoneRepository.EditAsync(id, zone);
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -118,9 +118,9 @@ namespace DeviceManagement_WebApp.Controllers
                 return NotFound();
             }
 
-            _zoneRepository.DeleteAsync(id);
+            var zone = await _zoneRepository.GetDetailAsync(id);
 
-            return View();
+            return View(zone);
         }
 
         // POST: Zones/Delete/5
@@ -128,7 +128,7 @@ namespace DeviceManagement_WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmedAsync(Guid id)
         {
-            _zoneRepository.DeleteConfirmedAsync(id);
+            await _zoneRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 

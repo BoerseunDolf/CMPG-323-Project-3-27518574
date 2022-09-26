@@ -18,33 +18,30 @@ namespace DeviceManagement_WebApp.Repositories
             _context = context;
         }
 
-        // GET: Categories
         public async Task<List<Category>> GetCategoryListAsync()
         {
             return await _context.Category.ToListAsync();
         }
 
-        // GET: Categories/Details/5
         public async Task<Category> GetDetailAsync(Guid? id)
         {
             return await _context.Category
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
         }
 
-        public async void CreateCategory(Category category)
+        public async Task CreateCategoryAsync(Category category)
         {
             category.CategoryId = Guid.NewGuid();
             _context.Add(category);
             await _context.SaveChangesAsync();
         }
 
-        // GET: Categories/Edit/5
         public async Task<Category> FindAsync(Guid? id)
         {
             return await _context.Category.FindAsync(id);
         }
 
-        public async void EditAsync(Guid id, Category category)
+        public async Task EditAsync(Guid id, Category category)
         {
             try
             {
@@ -57,8 +54,7 @@ namespace DeviceManagement_WebApp.Repositories
             }
         }
 
-        // GET: Categories/Delete/5
-        public async void DeleteAsync(Guid? id)
+        public async Task DeleteAsync(Guid? id)
         {
             var category = await _context.Category
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
@@ -67,10 +63,7 @@ namespace DeviceManagement_WebApp.Repositories
             await _context.SaveChangesAsync();
         }
 
-        // POST: Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async void DeleteConfirmedAsync(Guid id)
+        public async Task DeleteConfirmedAsync(Guid id)
         {
             var category = await _context.Category.FindAsync(id);
             _context.Category.Remove(category);
