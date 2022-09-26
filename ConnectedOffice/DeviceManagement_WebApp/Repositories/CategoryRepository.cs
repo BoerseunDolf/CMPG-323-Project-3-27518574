@@ -60,7 +60,6 @@ namespace DeviceManagement_WebApp.Repositories
         // GET: Categories/Delete/5
         public async void DeleteAsync(Guid? id)
         {
-            
             var category = await _context.Category
                 .FirstOrDefaultAsync(m => m.CategoryId == id);
 
