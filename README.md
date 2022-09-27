@@ -94,6 +94,5 @@ Devices
 	4- Click the red "Delete" button to delete the Device.
 	5- Click on the "Back to list" to go back to the list if you no longer wish to delete the Device.
 	
-## <heading 4>
 Loging out
 - Click on the "Logout" tab to log out of the WebApp.
