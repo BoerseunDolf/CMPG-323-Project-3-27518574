@@ -1,7 +1,6 @@
 # CMPG-323-Project-3-27518574
 Project-3-Webapp Development
 
-## <heading 2>
 Register an Login
 
 If you are already a registered User:
@@ -14,7 +13,6 @@ If you are not a registered User:
 	2- Insert your user details in the provided spaces.
 	3- Click on "Register" button to proceed.
 
-##<heading 3>
 Using the Webapp
 
 Zones
